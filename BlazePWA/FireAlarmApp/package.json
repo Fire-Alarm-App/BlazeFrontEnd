@@ -39,6 +39,6 @@
   "scripts": {
     "start:client": "cd client && yarn start",
     "start:server": "node index.js",
-    "start": "concurrently \"npm run start:client\" \"npm run start:server\""
+    "start": "concurrently \"npm run start:client\""
   }
 }

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {FaBars, FaTimes} from 'react-icons/fa';
 import { FaFire } from "react-icons/fa";
 import { Button } from './Button';
@@ -9,11 +9,16 @@ import { AuthPane } from './AuthPane';
 import {subscribe} from '../script';
 
 export default function Navbar() {
+  const navigate = useNavigate()
   const [isPaneOpen, setIsPaneOpen] = useState(false);
   const togglePane = () => {
     setIsPaneOpen(!isPaneOpen);
-  };
+  }; 
 
+  const signOut = () => {
+  localStorage.removeItem('token'); // Remove the session token
+  navigate('/'); // Navigate to sign-up page or '/' for home page
+};
 
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true)
@@ -42,7 +47,7 @@ export default function Navbar() {
     <IconContext.Provider value={{color: '#A9423F'}}>
      <div className="navbar">
        <div className = "navbar-container container">
-        <Link to='/' className = "navbar-logo" onClick={closeMobileMenu}>
+        <Link to='/home' className = "navbar-logo" onClick={closeMobileMenu}>
             <FaFire className = 'nav-bar icon' />
          BLAZE
         </Link>
@@ -51,12 +56,12 @@ export default function Navbar() {
         </div> 
         <ul className={click ? 'nav-menu active' : 'nav-menu'} onClick={closeMobileMenu}>
         <li className = "nav-item">
-            <Link to='/' className="nav-links">
+            <Link to='/home' className="nav-links">
                 Home
             </Link>
           </li>
           <li className = "nav-item">
-            <Link to='/' className="nav-links">
+            <Link to='/home' className="nav-links">
                 Dashboard
             </Link>
           </li>
@@ -73,15 +78,15 @@ export default function Navbar() {
        
           <li className = "nav-btn">
            {button ? (
-            <Link to= '/sign-up' className="btn-link">
+            <div className="btn-link">
 
-               <Button buttonStyle='btn--outline'>SIGN UP</Button>
-            </Link>
+               <Button buttonStyle='btn--outline' onClick={signOut} >SIGN OUT</Button>
+            </div>
 
            ): (
-            <Link className = "btn-link">
-                <Button buttonStyle = 'btn--outline' buttonSize='btn--mobile'> SIGN UP</Button>
-            </Link>
+            <div className = "btn-link">
+                <Button buttonStyle = 'btn--outline' onClick={signOut}  buttonSize='btn--mobile'> SIGN OUT</Button>
+            </div>
            )}
           </li>
 
