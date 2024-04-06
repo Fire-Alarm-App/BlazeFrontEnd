@@ -30,6 +30,18 @@ export const AuthPane = ({
 
   const handleAuthResponse = (response) => {
     console.log(`User response: ${response}`);
+    const boolResponse = response === 'Yes'
+    const token = localStorage.getItem('token')
+    fetch(`http://localhost:4000/api/response?confirmed=${boolResponse}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': token
+      }
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to confirm/deny alarm.")
+      }
+    });
     setIsOpen(false); // Close the pane after response
   };
 
