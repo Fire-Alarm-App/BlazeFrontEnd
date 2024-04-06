@@ -8,14 +8,16 @@ export async function subscribe() {
     });
 
     const data = {
-      sub: push,
-      user: 'bcsotty' // Replace with user's username once system is built
+      sub: push
     };
+
+    const token = localStorage.getItem('token');
 
     fetch('http://localhost:4000/subscribe', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': token
       },
       body: JSON.stringify(data)
     }).then(response => {
@@ -25,12 +27,11 @@ export async function subscribe() {
       alert('Subscribe failure: ' + response.ok)
     });
   }
-
 }
 
 // Allows offline support for PWA
 if ('serviceWorker' in navigator) {
-  addEventListener('load', async () => {
+  window.addEventListener('load', async () => {
     await navigator.serviceWorker.register('/sw.js');
     console.log('Service Worker Registered');
   });
