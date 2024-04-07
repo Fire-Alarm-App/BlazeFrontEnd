@@ -1,33 +1,43 @@
 import "./DataTable.css";
 
 const DataTable = ({ data, onDropdownChange, onButtonClick }) => {
+    const alarms = data && data.alarms ? data.alarms : [];
+    const users = data && data.users ? data.users : [];
+
+    console.log(alarms, users, data)
+
     return (
       <div className="data-table-container">
         <table className="data-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Actions</th>
-              <th>Commit</th> {/* Empty header for button column */}
+              <th>Alarm Serial</th>
+              <th>Location</th>
+              <th>Primary User</th>
+              <th>Commit</th>{/* Empty header for button column */}
             </tr>
           </thead>
           <tbody>
-            {data.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.name}</td>
+            {alarms.map((alarm) => (
+              <tr key={alarm.serial}>
+                <td>{alarm.serial}</td>
+                <td>
+                    <input type="text" defaultValue={alarm.location} />
+                </td>
                 <td>
                   {/* Dropdown menu for actions */}
-                  <select name="actions" onChange={(e) => onDropdownChange(e, item)}>
-                    <option value="">Select Action</option>
-                    <option value="add">Add</option>
-                    <option value="remove">Remove</option>
+                  <select name="actions" value={alarm.username} onChange={(e) => onDropdownChange(e, alarm)}>
+                    <option key="" value="null">No User Assigned</option>
+                      {users.map((username) => (
+                        <option key={username} value={username}>
+                            {username}
+                        </option>
+                    ))}
                   </select>
                 </td>
                 <td>
                   {/* Button column */}
-                  <button onClick={() => onButtonClick(item)}>Click Me</button>
+                  <button onClick={() => onButtonClick(alarm)}>Save Changes</button>
                 </td>
               </tr>
             ))}

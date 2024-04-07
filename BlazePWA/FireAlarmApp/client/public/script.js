@@ -1,5 +1,5 @@
 
-export async function subscribe() {
+async function subscribe() {
   if ('serviceWorker' in navigator) {
     let sw = await navigator.serviceWorker.ready;
     let push = await sw.pushManager.subscribe({
@@ -8,29 +8,30 @@ export async function subscribe() {
     });
 
     const data = {
-      sub: push,
-      user: 'bcsotty' // Replace with user's username once system is built
+      sub: push
     };
 
-    fetch('http://localhost:4000/subscribe', {
+    const token = localStorage.getItem('token');
+
+    fetch('http://141.215.80.233:4000/subscribe', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': token
       },
       body: JSON.stringify(data)
     }).then(response => {
       if (response.ok)
         alert('Successfully subscribed to fire alarm alerts!' + response.ok);
       else
-      alert('Subscribe failure: ' + response.ok)
+        alert('Subscribe failure: ' + response.ok)
     });
   }
-
 }
 
 // Allows offline support for PWA
 if ('serviceWorker' in navigator) {
-  addEventListener('load', async () => {
+  window.addEventListener('load', async () => {
     await navigator.serviceWorker.register('/sw.js');
     console.log('Service Worker Registered');
   });
