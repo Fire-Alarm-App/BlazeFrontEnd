@@ -5,6 +5,7 @@ import Home from './components/pages/HomePage/Home';
 import Footer from './components/pages/Footer/Footer';
 import { AuthPane } from './components/AuthPane';
 import SignUp from './components/pages/SignUp/SignUp';
+import Admin from './components/pages/AdminPage/Admin';
 import './App.css';
 import { ProtectedRoute } from './components/ProtectedRoute'; 
 
@@ -34,7 +35,7 @@ function AppContent() {
         <Route path='/' element={<SignUp />} />
         {/* Use the ProtectedRoute for the /home path */}
         <Route path='/home' element={<ProtectedRoute element={<Home />} />} />
-        <Route path='/dashboard' element={<ProtectedRoute element={<Home />} />} />
+        <Route path='/dashboard' element={<ProtectedRoute element={<Admin/>} />} />
         <Route path='/products' element={<ProtectedRoute element={<Home />} />} />
         {/* Add more protected routes in a similar manner */}
       </Routes>

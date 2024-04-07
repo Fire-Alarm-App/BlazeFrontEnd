@@ -1,0 +1,131 @@
+.data-table-container {
+    display: flex;
+    justify-content: center;
+    background-color: #363F44;
+  }
+  
+  .data-table {
+    max-width: 100%; /* Ensures the table does not exceed the width of its container */
+    border-collapse: collapse;
+    background-color: #fff;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .data-table th,
+  .data-table td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .data-table th {
+    background-color: #A9423F;
+    color: white;
+  }
+  
+  .data-table tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* Pagination Styles */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+    flex-wrap: wrap; /* Allow pagination items to wrap on small screens */
+  }
+  
+  .page-item {
+    display: inline;
+  }
+  
+  .page-item:first-child .page-link {
+    margin-left: 0;
+    border-bottom-left-radius: 0.25rem;
+    border-top-left-radius: 0.25rem;
+  }
+  
+  .page-item:last-child .page-link {
+    border-bottom-right-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+  }
+  
+  .page-item.active .page-link,
+  .page-item.active .page-link:focus,
+  .page-item.active .page-link:hover {
+    z-index: 2;
+    color: #fff;
+    background-color: #A9423F;
+    border-color: #A9423F;
+  }
+  
+  .page-item.disabled .page-link,
+  .page-item.disabled .page-link:focus,
+  .page-item.disabled .page-link:hover {
+    color: #818a91;
+    background-color: #fff;
+    border-color: #ddd;
+  }
+  
+  .page-link {
+    padding: 0.5rem 0.75rem;
+    margin-left: -1px;
+    color: #A9423F;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    cursor: pointer;
+  }
+  
+  .page-link:focus,
+  .page-link:hover {
+    color: #A9423F;
+    background-color: #363F44;
+  }
+  
+  @media (max-width: 768px) {
+    .data-table-container {
+      flex-direction: column; /* Stack flex items vertically on small screens */
+      align-items: center; /* Center align the flex items */
+      padding: 0 10px; /* Add padding to ensure content does not touch the edges */
+    }
+  
+    .data-table {
+      width: 100%; /* Full-width on small screens */
+      overflow-x: auto; /* Allow horizontal scrolling on small screens */
+    }
+  
+    .data-table th,
+    .data-table td {
+      padding: 8px; /* Adjust padding for small screens */
+    }
+  
+    .pagination {
+      overflow-x: auto; /* Enable horizontal scrolling for pagination */
+      flex-wrap: nowrap; /* Prevent wrapping of items */
+    }
+  
+    .page-item {
+      min-width: 40px; /* Ensure touch targets are not too small */
+    }
+  
+    .page-link {
+      padding: 0.5rem; /* Adjust padding for touch targets */
+    }
+  }
+  
+  /* Additional styles for very small screens like 375px wide devices */
+  @media (max-width: 480px) {
+    .data-table-container {
+      padding: 0; /* Remove padding or reduce it as needed */
+    }
+    
+    .data-table th,
+    .data-table td {
+      padding: 6px; /* Smaller padding for very tight spaces */
+    }
+  
+    /* Adjust styles for pagination if needed */
+  }
