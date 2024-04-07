@@ -34,13 +34,27 @@ export default function Navbar() {
     }
   }
 
+  const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     showButton();
+    const token = localStorage.getItem('token');
+
+    if (token) {
+        fetch('http://localhost:4000/authenticateAdmin', {
+            method: "POST",
+            headers: {
+                'Authorization': token
+            }
+        }).then(res => {
+            setIsAdmin(res.ok);
+        }).catch(err => {
+            console.error('Error fetching admin status:', err);
+            setIsAdmin(false);
+        })
+    }
   }, []);
 
-
   window.addEventListener('resize', showButton);
- 
 
   return (
     <>
@@ -60,20 +74,17 @@ export default function Navbar() {
                 Home
             </Link>
           </li>
-          <li className = "nav-item">
-            <Link to='/dashboard' className="nav-links">
-                Dashboard
-            </Link>
-          </li>
-          <li className = "nav-item">
-            <Link to='/services' className="nav-links" onClick={closeMobileMenu}>
-               Admin Panel
-            </Link>
-          </li>
-          <li className = "nav-item">
-            <Link to='/products' className="nav-links" onClick={closeMobileMenu}>
-             Settings
-            </Link>
+          {isAdmin && (
+            <li className="nav-item">
+              <Link to='/services' className="nav-links" onClick={closeMobileMenu}>
+                Admin Panel
+              </Link>
+            </li>
+          )}
+          <li className="nav-item">
+              <Link to='/products' className="nav-links" onClick={closeMobileMenu}>
+                  Settings
+              </Link>
           </li>
        
           <li className = "nav-btn">
