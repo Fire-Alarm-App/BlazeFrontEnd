@@ -1,54 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Assuming you are using axios for API requests
+import axios from 'axios';
 import Pagination from './Pagination';
 import DataTable from './DataTable';
 
 const ITEMS_PER_PAGE = 10;
 
 const ParentComponent = () => {
-  const [data, setData] = useState({}); // This will store the data fetched from the API
+  const [data, setData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Retrieve the token from localStorage
         const token = localStorage.getItem('token');
-
-        // Check if the token exists before making the request
         if (!token) {
           console.error("Authorization token not found in localStorage.");
           return;
         }
 
-        // Include the token in the Authorization header of the request
         const response = await axios.get('http://localhost:4000/dashboard', {
-          headers: {
-            Authorization: token
-          }
+          headers: { Authorization: token }
         });
 
-        const alarms = [];
-        response.data.alarms.forEach((alarm) => {
-          const username = alarm[2] ? alarm[2] : "null"
-          alarms.push({
-            serial: alarm[0],
-            location: alarm[1],
-            username: username
-          });
+        const alarms = response.data.alarms.map(alarm => ({
+          serial: alarm[0],
+          location: alarm[1],
+          username: alarm[2] ? alarm[2] : "null"
+        }));
+
+        const users = response.data.users.map(user => user['username']);
+
+        setData({
+          alarms,
+          users
         });
-
-        const users = [];
-        response.data.users.forEach((user) => {
-          users.push(user['username']);
-        });
-
-        const data = {
-          "alarms": alarms,
-          "users": users
-        }
-
-        setData(data);
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
       }
@@ -61,28 +46,76 @@ const ParentComponent = () => {
     setCurrentPage(pageNumber);
   };
 
-  const onDropdownChange = (event, alarm) => {
+  const onButtonClick = async (updatedAlarm) => {
+    try {
+      // Construct the API endpoint
+      const endpoint = 'http://localhost:4000/alarm';
+  
+      // Prepare the data to send in the body of the request
+      const updateData = {
+        alarmSerial: updatedAlarm.serial,
+        location: updatedAlarm.location,
+        username: updatedAlarm.username === "null" ? "" : updatedAlarm.username, // Empty string if "null"
+      };
+  
+      // Retrieve the token from localStorage
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error("Authorization token not found.");
+        return;
+      }
+  
+      // Make the API call with the authorization header
+      const response = await axios.post(endpoint, updateData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token  // Use the token from localStorage
+        }
+      });
+  
+      // Log or handle the successful response
+      console.log('Alarm configuration successful:', response.data);
+      // Optionally, update your UI here to reflect the changes
+    } catch (error) {
+      // Log or handle any errors that occur during the API call
+      console.error('Failed to configure alarm:', error.response ? error.response.data : error);
+    }
   };
 
-  const currentPageData = [];
-  if (data.alarms)
-    for (let i = currentPage - 1; i < currentPage * ITEMS_PER_PAGE; i++) {
-      if (!data.alarms[i])
-        break;
-      currentPageData.push(data.alarms[i]);
-    }
+  const onDropdownChange = (selectedValue, alarmToUpdate) => {
+    // Map over alarms to update the username or set it to null if "No User Assigned" is selected
+    const updatedAlarms = data.alarms.map(alarm => {
+      if (alarm.serial === alarmToUpdate.serial) {
+        return { ...alarm, username: selectedValue === "null" ? null : selectedValue };
+      }
+      return alarm;
+    });
+
+
+    
+    
+  
+    // Update the state with the new alarms array
+    setData(prevData => ({
+      ...prevData,
+      alarms: updatedAlarms
+    }));
+  };
+  const currentPageData = data.alarms ? data.alarms.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE) : [];
 
   const inputData = {
-      "alarms": currentPageData,
-      "users": data.users
+    alarms: currentPageData,
+    users: data.users || []
   };
 
-  const total_alarms = data.alarms ? data.alarms.length : 0
+  const total_alarms = data.alarms ? data.alarms.length : 0;
+
   return (
     <div>
       <DataTable
-          data={inputData}
-          onDropdownChange={onDropdownChange}
+        data={inputData}
+        onDropdownChange={onDropdownChange}
+        onButtonClick={onButtonClick}
       />
       <Pagination
         currentPage={currentPage}
