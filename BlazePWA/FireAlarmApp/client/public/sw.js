@@ -22,9 +22,11 @@ self.addEventListener('push', function (event) {
       self.registration.showNotification(title, options)
   );
 
-  const channel = new BroadcastChannel('sw-messages');
-  channel.postMessage({ action: 'showAuthPane', data: { /* Optional data to send */ } });
-  console.log("Notification and animation trigger sent");
+  if (actions.length > 0) {
+    const channel = new BroadcastChannel('sw-messages');
+    channel.postMessage({ action: 'showAuthPane', data: { /* Optional data to send */ } });
+    console.log("Notification and animation trigger sent");
+  }
 });
 
 self.addEventListener('notificationclick', async (event) => {

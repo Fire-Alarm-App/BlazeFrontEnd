@@ -76,6 +76,7 @@ const ParentComponent = () => {
       // Log or handle the successful response
       console.log('Alarm configuration successful:', response.data);
       // Optionally, update your UI here to reflect the changes
+      alert('Successfully updated alarm information');
     } catch (error) {
       // Log or handle any errors that occur during the API call
       console.error('Failed to configure alarm:', error.response ? error.response.data : error);
