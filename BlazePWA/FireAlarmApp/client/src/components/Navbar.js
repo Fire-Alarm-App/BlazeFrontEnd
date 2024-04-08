@@ -76,7 +76,7 @@ export default function Navbar() {
           </li>
           {isAdmin && (
             <li className="nav-item">
-              <Link to='/services' className="nav-links" onClick={closeMobileMenu}>
+              <Link to='/dashboard' className="nav-links" onClick={closeMobileMenu}>
                 Admin Panel
               </Link>
             </li>
